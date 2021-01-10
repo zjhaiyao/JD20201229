@@ -5,7 +5,7 @@ name: 宠汪汪邀请助力与赛跑助力
 on:
   workflow_dispatch:
   schedule:
-    - cron: '15 1,6,10 * * *'
+    - cron: '15 0,1,2,3,9 * * *'
   watch:
     types: started
 
