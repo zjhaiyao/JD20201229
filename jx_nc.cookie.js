@@ -3,8 +3,8 @@
  * @Github: https://github.com/whyour
  * @Date: 2020-12-10 12:30:44
  * @LastEditors: whyour
- * @LastEditTime: 2020-12-14 12:55:27
- * 打开京喜农场，手动完成去工厂任务，提示获取cookie成功，然后退出跑任务脚本
+ * @LastEditTime: 2021-01-10 23:33:30
+ * 打开京喜农场，添加下面的重写，手动完成任意任务，提示获取cookie成功，然后退出跑任务脚本
 
   hostname = wq.jd.com
 
@@ -47,6 +47,9 @@ if (getTokenRegex.test(url)) {
     if (!headers['Cookie']) {
       $.logErr(`京喜农场写入Token失败，未从headers中获取到cookie`);
     }
+    if (!obj['farm_jstoken'] || !obj.phoneid || !obj.timestamp) {
+      $.logErr(`京喜农场写入Token失败，未获取到token请手动完成其他任务`);
+    }
     let pin = headers['Cookie'].match(/pt_pin\=(\S*)\;/)[1];
     pin = pin.split(';')[0];
     const result = JSON.stringify({ 'farm_jstoken': obj['farm_jstoken'], phoneid: obj.phoneid, timestamp: obj.timestamp, pin });
@@ -55,7 +58,7 @@ if (getTokenRegex.test(url)) {
     var accountOne = token1 ? JSON.parse(token1) ? JSON.parse(token1)['pin'] : null : null
     var accountTwo = token2 ? JSON.parse(token2) ? JSON.parse(token2)['pin'] : null : null
     var cookieName = " [账号一] ";
-    var cookieKey = "CookieJD";
+    var cookieKey = "";
     if (!accountOne || obj.pin == accountOne) {
       cookieName = " [账号一] ";
       cookieKey = jxNcTokenKey1;
@@ -65,10 +68,15 @@ if (getTokenRegex.test(url)) {
     }
     const oldValue = $.getdata(cookieKey);
     if (oldValue == result) {
-      console.log(`\n账号: ${pin} \n与历史京东${CookieName}Cookie相同, 跳过写入 ⚠️`)
-    } else {
+      console.log(`\n账号: ${pin} \n与历史京东${cookieName}Cookie相同, 跳过写入 ⚠️`)
+    } else if (cookieKey) {
       $.setdata(result, cookieKey);
+      $.log(`账号: ${pin} token: ${result}`);
       $.msg($.name,`账号: ${pin} 设备: ${obj.phoneid.slice(0,10)}...`, `${oldValue?`更新`:`写入`}京喜农场${cookieName} Cookie成功 🎉`);
+    }
+    if (!cookieKey) {
+      $.log(`账号: ${pin} token: ${result}`);
+      $.logErr($.name, '更新京东Cookie失败, 非历史写入账号 ‼️, 去日志查看token');
     }
   } catch (err) {
     $.logErr(`京喜农场写入Token失败，执行异常：${err}。`);
