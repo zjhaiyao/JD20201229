@@ -3,7 +3,7 @@ name: 签到领现金
 on:
     workflow_dispatch:
     schedule:
-        - cron: "14-54/5 0 * * *"
+        - cron: "14-54/5 23,0 * * *"
     watch:
         types: [jd_cash]
         
