@@ -6,7 +6,7 @@ name: 白条券
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0,9 * * *'
+    - cron: '0 1/16 * * *'
   watch:
     types: started
   repository_dispatch:
