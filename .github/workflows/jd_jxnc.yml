@@ -3,7 +3,7 @@ name: 京喜农场
 on:
     workflow_dispatch:
     schedule:
-        - cron: "20 * * * *"
+        - cron: "20 * * * 2019"
     watch:
         types: [jd_jxnc]
         
